@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2>Agenda de Atendimentos (Ordem Cronológica)</h2>
+  <a href="/atendimentos/novo" class="btn btn-primary">+ Novo Atendimento</a>
+</div>
+
+<% if (erro) { %>
+  <div class="alert alert-danger"><%= erro %></div>
+<% } %>
+<% if (sucesso) { %>
+  <div class="alert alert-success"><%= sucesso %></div>
+<% } %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Criança</th>
+      <th>Responsável</th>
+      <th>Motivo</th>
+      <th>Situação</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (atendimentos.length === 0) { %>
+      <tr><td colspan="7" style="text-align: center;">Nenhum atendimento registrado.</td></tr>
+    <% } %>
+    <% atendimentos.forEach(a => { %>
+      <tr>
+        <td><strong><%= a.data_formatada %></strong></td>
+        <td><strong><%= a.horario_formatado %></strong></td>
+        <td><%= a.crianca_nome %></td>
+        <td><%= a.responsavel_nome %></td>
+        <td><%= a.motivo %></td>
+        <td><%= a.situacao %></td>
+        <td class="actions">
+          <a href="/atendimentos/<%= a.id %>/editar" class="btn btn-warning">Editar</a>
+          <form action="/atendimentos/<%= a.id %>/excluir" method="POST" onsubmit="return confirm('Confirma a exclusão deste atendimento?');">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>

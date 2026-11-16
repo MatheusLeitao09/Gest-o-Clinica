@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clínica Pediátrica Pequenos Passos</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    nav a { margin-right: 15px; }
+    table { border-collapse: collapse; margin-top: 15px; width: 100%; }
+    th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; }
+    .alert-danger { color: red; font-weight: bold; margin: 10px 0; }
+    .alert-success { color: green; font-weight: bold; margin: 10px 0; }
+    .actions { display: flex; gap: 6px; }
+  </style>
+</head>
+<body>
+  <% if (typeof usuarioLogado !== 'undefined' && usuarioLogado) { %>
+    <header>
+      <h1>Clínica Pediátrica Pequenos Passos</h1>
+      <p>
+        Operador: <strong><%= usuarioLogado.nome %></strong>
+        <form action="/logout" method="POST" style="display: inline; margin-left: 10px;">
+          <button type="submit">Sair</button>
+        </form>
+      </p>
+    </header>
+    <nav>
+      <a href="/">Início</a>
+      <a href="/responsaveis">Responsáveis</a>
+      <a href="/criancas">Crianças</a>
+      <a href="/atendimentos">Atendimentos</a>
+    </nav>
+    <hr>
+  <% } %>
+  <main>

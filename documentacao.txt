@@ -1,0 +1,57 @@
+================================================================================
+DOCUMENTAÇÃO DE REQUISITOS E INFRAESTRUTURA (ANEXO 1)
+Projeto: Sistema de Gestão - Clínica Pediátrica Pequenos Passos
+================================================================================
+
+1. VISÃO GERAL E ARQUITETURA
+O sistema é uma aplicação web monolítica executada em ambiente local, baseada no
+padrão MVC simplificado com renderização no lado do servidor (SSR). O fluxo de
+dados ocorre através de formulários HTML tradicionais submetidos via HTTP para
+rotas Express, que validam os dados, executam consultas parametrizadas no
+PostgreSQL e devolvem páginas dinâmicas renderizadas em EJS.
+
+2. ESPECIFICAÇÕES DE INFRAESTRUTURA E TECNOLOGIAS
+- Ambiente de Execução: Node.js (v18+ com suporte a ES Modules - import/export)
+- Framework Web: Express.js
+- Motor de Templates: EJS (Embedded JavaScript)
+- Banco de Dados Relacional: PostgreSQL (Porta padrão de laboratório: 7777)
+- Driver de Banco de Dados: node-postgres (pg)
+- Gerenciamento de Sessão: express-session (com cookie HttpOnly e expiração)
+- Segurança e Criptografia:
+  * bcryptjs: Hash unidirecional com salt para armazenamento seguro de senhas.
+  * crypto (nativo Node.js): Criptografia simétrica AES-256-CBC para proteção
+    reversível de CPFs e SHA-256 (HMAC) para busca determinística de login.
+- Variáveis de Ambiente: dotenv (isolamento de credenciais e chaves secretas).
+
+3. REQUISITOS FUNCIONAIS (RF)
+- RF01 (Autenticação): O sistema permite login de operadores utilizando CPF e
+  senha. Em caso de falha, exibe mensagem genérica ("CPF ou senha inválidos")
+  para evitar enumeração de usuários.
+- RF02 (Página Inicial): Após login, exibe o nome do operador autenticado, menu
+  de navegação para os módulos (Responsáveis, Crianças, Atendimentos) e botão
+  de logout.
+- RF03 (CRUD de Responsáveis): Permite cadastrar, listar, editar e excluir
+  responsáveis (Nome, CPF, E-mail, Telefone). Impede exclusão caso existam
+  crianças vinculadas (integridade referencial).
+- RF04 (Busca de Responsáveis): Permite pesquisa parcial (case-insensitive) pelo
+  nome do responsável, atualizando a listagem exibida.
+- RF05 (CRUD de Crianças): Permite cadastrar, listar, editar e excluir crianças
+  (Nome, Data de Nascimento), exigindo a seleção de um responsável cadastrado.
+- RF06 (CRUD de Atendimentos): Permite cadastrar, listar, editar e excluir
+  atendimentos vinculados a uma criança existente, informando data, horário,
+  motivo e situação (Agendado, Realizado, Cancelado).
+- RF07 (Listagem Integrada): A consulta de atendimentos utiliza INNER JOIN para
+  exibir simultaneamente os dados da consulta, da criança e do responsável.
+- RF08 (Ordenação Cronológica): A listagem de atendimentos é ordenada pela data
+  mais próxima para a mais distante (ASC), usando o horário como desempate (ASC).
+- RF09 (Controle de Sessão): Middleware bloqueia acesso não autenticado às
+  rotas internas. A sessão expira automaticamente após tempo de inatividade e
+  pode ser encerrada manualmente via rota de logout.
+
+4. REQUISITOS NÃO FUNCIONAIS E PROTEÇÃO DE DADOS (LGPD)
+- Proteção contra SQL Injection via consultas parametrizadas ($1, $2...).
+- Senhas nunca são armazenadas em texto plano (apenas hash bcrypt).
+- CPFs são armazenados criptografados no banco de dados e descriptografados
+  apenas na camada de aplicação para usuários autenticados.
+- Chaves criptográficas e credenciais do banco ficam isoladas em arquivo .env
+  não versionado.

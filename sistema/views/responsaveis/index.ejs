@@ -1,0 +1,56 @@
+<%- include('../partials/header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2>Responsáveis Cadastrados</h2>
+  <a href="/responsaveis/novo" class="btn btn-primary">+ Novo Responsável</a>
+</div>
+
+<% if (erro) { %>
+  <div class="alert alert-danger"><%= erro %></div>
+<% } %>
+<% if (sucesso) { %>
+  <div class="alert alert-success"><%= sucesso %></div>
+<% } %>
+
+<form action="/responsaveis" method="GET" style="display: flex; gap: 10px; margin-top: 15px;">
+  <input type="text" name="busca" value="<%= busca %>" placeholder="Buscar responsável por nome..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+  <button type="submit" class="btn btn-primary">Buscar</button>
+  <% if (busca) { %>
+    <a href="/responsaveis" class="btn btn-secondary">Limpar</a>
+  <% } %>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>CPF (Descriptografado)</th>
+      <th>E-mail</th>
+      <th>Telefone</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (responsaveis.length === 0) { %>
+      <tr><td colspan="6" style="text-align: center;">Nenhum responsável encontrado.</td></tr>
+    <% } %>
+    <% responsaveis.forEach(r => { %>
+      <tr>
+        <td><%= r.id %></td>
+        <td><%= r.nome %></td>
+        <td><%= r.cpf %></td>
+        <td><%= r.email %></td>
+        <td><%= r.telefone %></td>
+        <td class="actions">
+          <a href="/responsaveis/<%= r.id %>/editar" class="btn btn-warning">Editar</a>
+          <form action="/responsaveis/<%= r.id %>/excluir" method="POST" onsubmit="return confirm('Confirma a exclusão deste responsável?');">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>

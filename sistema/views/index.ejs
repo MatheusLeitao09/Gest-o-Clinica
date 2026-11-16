@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+
+<h2>Bem-vindo(a), <%= usuarioLogado.nome %>!</h2>
+<p>Selecione um dos módulos abaixo ou utilize o menu acima:</p>
+
+<ul>
+  <li>
+    <strong>Responsáveis:</strong> <%= totais.responsaveis %> cadastrado(s) —
+    <a href="/responsaveis">Gerenciar Responsáveis</a>
+  </li>
+  <li>
+    <strong>Crianças:</strong> <%= totais.criancas %> cadastrada(s) —
+    <a href="/criancas">Gerenciar Crianças</a>
+  </li>
+  <li>
+    <strong>Atendimentos:</strong> <%= totais.atendimentos %> registrado(s) —
+    <a href="/atendimentos">Agenda de Atendimentos</a>
+  </li>
+</ul>
+
+<%- include('partials/footer') %>

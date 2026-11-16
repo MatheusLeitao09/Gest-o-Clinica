@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2>Crianças Cadastradas</h2>
+  <a href="/criancas/novo" class="btn btn-primary">+ Nova Criança</a>
+</div>
+
+<% if (erro) { %>
+  <div class="alert alert-danger"><%= erro %></div>
+<% } %>
+<% if (sucesso) { %>
+  <div class="alert alert-success"><%= sucesso %></div>
+<% } %>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome da Criança</th>
+      <th>Data de Nascimento</th>
+      <th>Responsável Vinculado</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (criancas.length === 0) { %>
+      <tr><td colspan="5" style="text-align: center;">Nenhuma criança cadastrada.</td></tr>
+    <% } %>
+    <% criancas.forEach(c => { %>
+      <tr>
+        <td><%= c.id %></td>
+        <td><%= c.nome %></td>
+        <td><%= c.data_nascimento_formatada %></td>
+        <td><%= c.responsavel_nome %></td>
+        <td class="actions">
+          <a href="/criancas/<%= c.id %>/editar" class="btn btn-warning">Editar</a>
+          <form action="/criancas/<%= c.id %>/excluir" method="POST" onsubmit="return confirm('Confirma a exclusão desta criança?');">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>
